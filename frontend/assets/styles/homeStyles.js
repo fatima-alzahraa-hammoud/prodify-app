@@ -26,6 +26,62 @@ export const homeStyles = StyleSheet.create({
         color: COLORS.text,
         letterSpacing: -0.5,
     },
+
+    bannerImageContainer: {
+        marginHorizontal: 20,
+        marginTop: 25,
+        marginBottom: 24,
+        borderRadius: 24,
+        overflow: "hidden",
+        backgroundColor: COLORS.card,
+        shadowColor: COLORS.shadow,
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 16,
+        elevation: 12,
+        position: "relative",
+    },
+    bannerImage: {
+        width: "100%",
+        height: 200,
+        borderRadius: 24,
+    },
+
+    bannerOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "rgba(0, 0, 0, 0.15)",
+        borderRadius: 24,
+    },
+
+    bannerContent: {
+        position: "absolute",
+        bottom: 20,
+        left: 20,
+        right: 20,
+    },
+    bannerTitle: {
+        fontSize: 26,
+        fontWeight: "800",
+        color: COLORS.white,
+        letterSpacing: -0.5,
+        marginBottom: 4,
+        textShadowColor: "rgba(0, 0, 0, 0.3)",
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+    },
+    bannerSubtitle: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: COLORS.white,
+        opacity: 0.95,
+        textShadowColor: "rgba(0, 0, 0, 0.3)",
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
+    },
+
     styleImageSection: {
         paddingHorizontal: 20,
         marginBottom: 24,
