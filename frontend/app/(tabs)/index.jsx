@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { useState } from 'react';
 import {Image} from "expo-image";
+import CategoryFilter from '../../components/CategoryFilter';
 
 const HomeScreen = () => {
 
@@ -12,6 +13,13 @@ const HomeScreen = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    const handleCategorySelect = async (category) => {
+        setSelectedCategory(category);
+        setSearchQuery("");
+        // load category data
+    };
 
     return (
         <View style={homeStyles.container}>
@@ -62,6 +70,13 @@ const HomeScreen = () => {
                 </View>
 
                 {/* Categories with add button */}
+                {categories.length > 0 && (
+                    <CategoryFilter
+                        categories={categories}
+                        selectedCategory={selectedCategory}
+                        onSelectCategory={handleCategorySelect}
+                    />
+                )}
 
                 {/* render products */}
             </ScrollView>
