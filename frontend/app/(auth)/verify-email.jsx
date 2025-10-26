@@ -53,7 +53,7 @@ const VerifyEmail = ({email, onBack}) => {
                         style={authStyles.imageContainer}
                     >
                         <Image 
-                            source={require("../../assets/images/verify_email1.png")}
+                            source={require("../../assets/images/verify_email.png")}
                             style={authStyles.image}
                             contentFit="contain"
                         />
