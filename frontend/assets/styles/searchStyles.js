@@ -57,7 +57,7 @@ export const searchStyles = StyleSheet.create({
         color: COLORS.text,
         flex: 1,
     },
-    resultsCount: {
+    productCount: {
         fontSize: 14,
         color: COLORS.textLight,
         fontWeight: "500",
