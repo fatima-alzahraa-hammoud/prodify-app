@@ -6,6 +6,7 @@ import { authStyles } from '../../assets/styles/authStyles';
 import { Image } from 'expo-image';
 import { COLORS } from '../../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
+import VerifyEmail from './verify-email';
 
 const SignUp = () => {
 
@@ -47,6 +48,10 @@ const SignUp = () => {
         } finally{
             setLoading(false);
         }
+    }
+
+    if (pendingVerification){
+        return <VerifyEmail email={registerForm.email} onBack={() => setPendingVerification(false)} />;
     }
 
     return (
