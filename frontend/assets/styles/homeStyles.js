@@ -197,6 +197,27 @@ export const homeStyles = StyleSheet.create({
     selectedCategoryText: {
         color: COLORS.white,
     },
+    categoryAddButton: {
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: COLORS.card,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: COLORS.primary,
+        borderStyle: "dashed",
+        minWidth: 80,
+    },
+    categoryAddIconContainer: {
+        marginBottom: 4,
+    },
+    categoryAddText: {
+        fontSize: 12,
+        fontWeight: "600",
+        color: COLORS.primary,
+    },
 });
 
 export const productCardStyles = StyleSheet.create({
