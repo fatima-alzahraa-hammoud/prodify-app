@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TextInput, TouchableOpacity, FlatList } from 'react-native'
 import { homeStyles } from '../../assets/styles/homeStyles';
 import { searchStyles } from '../../assets/styles/searchStyles';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ const HomeScreen = () => {
     const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [filteredProducts, setFilteredProducts] = useState([]);
 
     const handleCategorySelect = async (category) => {
         setSelectedCategory(category);
@@ -79,6 +80,47 @@ const HomeScreen = () => {
                 )}
 
                 {/* render products */}
+                <View style={homeStyles.productsSection}>
+                    <View style={homeStyles.sectionHeader}>
+                        <Text style={homeStyles.sectionTitle}>
+                            {
+                                searchQuery 
+                                ? `Results for ${searchQuery}`
+                                : "All Products"
+                            }
+                        </Text>
+                        <Text style={searchStyles.productCount}>
+                            {filteredProducts.length} products
+                        </Text>
+                    </View>
+
+                    {filteredProducts.length > 0 ? (
+                        <FlatList 
+                            data={filteredProducts}
+                            renderItem={({item}) => <Text>Product Card here</Text>}
+                            keyExtractor={(item) => item.id.toString()}
+                            numColumns={2}
+                            columnWrapperStyle={homeStyles.row}
+                            contentContainerStyle={homeStyles.productsGrid}
+                            scrollEnabled={false}
+                        />
+                    ) : (
+                        <View style={homeStyles.emptyState}>
+                            <Ionicons 
+                                name='cube-outline'
+                                size={64}
+                                color={COLORS.textLight}
+                            />
+                            <Text style={homeStyles.emptyTitle}>No products found</Text>
+                            <Text style={homeStyles.emptyDescription}>
+                                { searchQuery
+                                    ? "Try adjusting your search"
+                                    : ""
+                                }
+                            </Text>
+                        </View>
+                    )}
+                </View>
             </ScrollView>
         </View>
     )
