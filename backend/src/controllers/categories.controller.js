@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { db } from "../config/db.js";
 import { categoryTable } from "../db/schema.js";
 import { throwError } from "../utils/throwError.js";
