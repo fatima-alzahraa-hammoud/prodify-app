@@ -1,6 +1,6 @@
 import { eq, inArray } from "drizzle-orm";
 import { db } from "../config/db.js";
-import { imagesTable, productImagesTable, productsTable } from "../db/schema.js";
+import { categoryTable, imagesTable, productImagesTable, productsTable } from "../db/schema.js";
 import { throwError } from "../utils/throwError.js";
 import fs from "fs";
 import path from "path";
@@ -100,9 +100,8 @@ export const deleteProduct = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-    const { categoryId, title, description, price, quantity } = req.body;
+    const { userId, categoryId, title, description, price, quantity } = req.body;
 
-    const userId = req.userId;
     const files = req.files; // multer adds uploaded files here
 
     if (!userId || !title || !price) return throwError({ message: "Missing required fields", res, status: 400 });
@@ -110,6 +109,15 @@ export const createProduct = async (req, res) => {
 
     const categoryIdInt = categoryId && categoryId !== "" ? Number(categoryId) : null;
 
+    if (categoryIdInt) {
+        const categoryExists = await db.select()
+            .from(categoryTable)
+            .where(eq(categoryTable.userId, userId), eq(categoryTable.id, categoryIdInt));
+
+        if (!categoryExists || categoryExists.length === 0) {
+            return throwError({ message: "Category does not exist", res, status: 400 });
+        }
+    }
     const priceNum = Number(price);
     const quantityNum = Number(quantity);
     if (isNaN(priceNum) || isNaN(quantityNum)) {
@@ -163,7 +171,19 @@ export const editProduct = async (req, res) => {
             if (isNaN(quantityNum)) return throwError({ message: "Quantity must be a number", res, status: 400 });
             updatedValues.quantity = quantityNum;
         }
-        if (categoryId && categoryId !== "") updatedValues.categoryId = Number(categoryId);
+
+        if (categoryId && categoryId !== "") {
+            const categoryIdNum = Number(categoryId);
+            const categoryExists = await db.select()
+                .from(categoryTable)
+                .where(eq(categoryTable.userId, userId), eq(categoryTable.id, categoryIdNum));
+
+            if (!categoryExists || categoryExists.length === 0) {
+                return throwError({ message: "Category does not exist", res, status: 400 });
+            }
+
+            updatedValues.categoryId = categoryIdNum;
+        }
 
         if (Object.keys(updatedValues).length > 0) {
             await db.update(productsTable)
