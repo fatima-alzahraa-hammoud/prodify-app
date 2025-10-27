@@ -1,7 +1,7 @@
 import {pgTable, serial, text, timestamp, integer, numeric} from "drizzle-orm/pg-core";
 import { categoryTable } from "./category";
 
-export const products = pgTable("products", {
+export const productsTable = pgTable("products", {
     id: serial("id").primaryKey(),
     userId: text("user_id").notNull(),
     categoryId: integer("category_id").references(() => categoryTable.id, { onDelete: "set null" }),
