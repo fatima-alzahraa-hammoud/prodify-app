@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../config/db.js";
-import { productsTable } from "../db/schema.js";
+import { imagesTable, productImagesTable, productsTable } from "../db/schema.js";
 import { throwError } from "../utils/throwError.js";
 
 export const getProducts = async (req, res) => {
@@ -72,3 +72,38 @@ export const deleteProduct = async (req, res) => {
     }
 
 }
+
+export const createProduct = async (req, res) => {
+    const { userId, categoryId, title, description, price, quantity } = req.body;
+    const files = req.files; // multer adds uploaded files here
+
+    if (!userId || !title || !price) return throwError({ message: "Missing required fields", res, status: 400 });
+    if (!files || files.length === 0) return throwError({ message: "At least one image is required", res, status: 400 });
+
+    const categoryIdInt = categoryId && categoryId !== "" ? Number(categoryId) : null;
+
+    // Convert price and quantity to numbers
+    const priceNum = Number(price);
+    const quantityNum = Number(quantity);
+
+    if (isNaN(priceNum) || isNaN(quantityNum)) {
+        return throwError({ message: "Price and quantity must be numbers", res, status: 400 });
+    }
+
+    try {
+        // 1. Create product
+        const [newProduct] = await db.insert(productsTable).values({ userId, categoryIdInt, title, description, priceNum, quantityNum }).returning();
+
+        // 2. Insert images and link to product
+        for (const file of files) {
+            const imagePath = `/uploads/${file.filename}`; // path to serve
+            const [newImage] = await db.insert(imagesTable).values({ image: imagePath }).returning();
+            await db.insert(productImagesTable).values({ productId: newProduct.id, imageId: newImage.id });
+        }
+
+        res.status(201).json({ product: newProduct });
+    } catch (error) {
+        console.error(error);
+        return throwError({ message: "Failed to create product", res, status: 500 });
+    }
+};
