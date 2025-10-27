@@ -42,7 +42,9 @@ export const getProductById = async (req, res) => {
 }
 
 export const deleteProduct = async (req, res) => {
-    const { userId, productId } = req.body;
+    const { productId } = req.body;
+
+    const userId = req.userId;
 
     if (!userId) {
         return throwError({ message: "userId is required", res, status: 400 });
@@ -74,7 +76,9 @@ export const deleteProduct = async (req, res) => {
 }
 
 export const createProduct = async (req, res) => {
-    const { userId, categoryId, title, description, price, quantity } = req.body;
+    const { categoryId, title, description, price, quantity } = req.body;
+    
+    const userId = req.userId;
     const files = req.files; // multer adds uploaded files here
 
     if (!userId || !title || !price) return throwError({ message: "Missing required fields", res, status: 400 });
