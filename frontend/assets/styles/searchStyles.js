@@ -35,6 +35,9 @@ export const searchStyles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
         color: COLORS.text,
+        backgroundColor: 'transparent',
+        borderWidth: 0,
+        outlineColor: 'transparent',
     },
     clearButton: {
         padding: 4,
