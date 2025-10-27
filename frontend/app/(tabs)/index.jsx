@@ -3,7 +3,7 @@ import { homeStyles } from '../../assets/styles/homeStyles';
 import { searchStyles } from '../../assets/styles/searchStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {Image} from "expo-image";
 import CategoryFilter from '../../components/CategoryFilter';
 import ProductCard from '../../components/ProductCard';
@@ -17,10 +17,72 @@ const HomeScreen = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState([]);
 
+    useEffect(() => {
+        loadCategories();
+        loadProducts();
+    }, []);
+
+    useEffect(() => {
+        filterProducts();
+    }, [searchQuery, selectedCategory, products]);
+
+    const loadCategories = async () =>{
+
+        try {
+            
+            setCategories([
+                { id: 1, name: 'Electronics', image: 'https://via.placeholder.com/100' },
+                { id: 2, name: 'Clothing', image: 'https://via.placeholder.com/100' },
+                { id: 3, name: 'Home', image: 'https://via.placeholder.com/100' },
+            ]);
+
+        } catch (error) {
+            console.error('Error loading categories:', error);
+        }
+    }
+
+    const loadProducts = async () =>{
+        try {
+            setLoading(true);
+
+
+            setProducts([
+                { id: 1, name: 'Product 1', price: 99.99, category: 'Electronics', image: 'https://via.placeholder.com/200', quantity: 6, description: "hello" },
+                { id: 2, name: 'Product 2', price: 49.99, category: 'Clothing', image: 'https://via.placeholder.com/200', quantity: 4,  description: "hiii"  },
+            ]);
+        } catch (error) {
+            console.error('Error loading products:', error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const filterProducts = () => {
+        let filtered = [...products];
+
+        if (selectedCategory){
+            filtered = filtered.filter( product => product.category === selectedCategory);
+        }
+
+        if (searchQuery.trim()){
+            filtered = filtered.filter(product => product.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        }
+
+        setFilteredProducts(filtered);
+    }
+
     const handleCategorySelect = async (category) => {
-        setSelectedCategory(category);
+        if (category === selectedCategory){
+            setSelectedCategory(null);
+        } else{
+            setSelectedCategory(category);
+        }
         setSearchQuery("");
         // load category data
+    };
+
+    const handleAddCategory = () => {
+
     };
 
     return (
@@ -77,6 +139,8 @@ const HomeScreen = () => {
                         categories={categories}
                         selectedCategory={selectedCategory}
                         onSelectCategory={handleCategorySelect}
+                        onAddPress={handleAddCategory}
+                        showAddButton={true}
                     />
                 )}
 
@@ -87,6 +151,8 @@ const HomeScreen = () => {
                             {
                                 searchQuery 
                                 ? `Results for ${searchQuery}`
+                                : selectedCategory
+                                ? selectedCategory
                                 : "All Products"
                             }
                         </Text>
