@@ -6,7 +6,7 @@ const app = express();
 const port = ENV.PORT;
 
 app.use(express.json());
-app.use("/product", productRoutes);
+app.use("/products", productRoutes);
 
 app.listen(port, () => {
     console.log("Server is running on Port: ", port);
