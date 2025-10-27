@@ -1,6 +1,6 @@
-import { pgTable, serial, integer, pgTable } from "drizzle-orm/pg-core";
-import { productsTable } from "./products";
-import { imagesTable } from "./images";
+import { pgTable, serial, integer } from "drizzle-orm/pg-core";
+import { productsTable } from "./products.js";
+import { imagesTable } from "./images.js";
 
 export const productImagesTable = pgTable("product_images", {
     id: serial("id").primaryKey(),
