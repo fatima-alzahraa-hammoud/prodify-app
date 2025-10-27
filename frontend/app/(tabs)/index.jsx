@@ -6,6 +6,7 @@ import { COLORS } from '../../constants/colors';
 import { useState } from 'react';
 import {Image} from "expo-image";
 import CategoryFilter from '../../components/CategoryFilter';
+import ProductCard from '../../components/ProductCard';
 
 const HomeScreen = () => {
 
@@ -97,7 +98,7 @@ const HomeScreen = () => {
                     {filteredProducts.length > 0 ? (
                         <FlatList 
                             data={filteredProducts}
-                            renderItem={({item}) => <Text>Product Card here</Text>}
+                            renderItem={({item}) => <ProductCard product={item}/>}
                             keyExtractor={(item) => item.id.toString()}
                             numColumns={2}
                             columnWrapperStyle={homeStyles.row}
