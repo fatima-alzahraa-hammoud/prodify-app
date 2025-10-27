@@ -2,7 +2,8 @@ import { eq } from "drizzle-orm";
 import { db } from "../config/db.js";
 import { categoryTable } from "../db/schema.js";
 import { throwError } from "../utils/throwError.js";
-
+import fs from "fs";
+import path from "path";
 
 export const getCategories = async (req, res) => {
     const userId = req.userId;
@@ -62,3 +63,39 @@ export const createCategory = async (req, res) => {
     }
 };
 
+
+export const editCategory = async (req, res) => {
+    const { categoryId, category } = req.body;
+    const userId = req.userId;
+    const file = req.file;
+
+    if (!userId) return throwError({ message: "userId is required", res, status: 400 });
+    if (!categoryId) return throwError({ message: "categoryId is required", res, status: 400 });
+
+    try {
+        const existing = await db.select().from(categoryTable)
+            .where(eq(categoryTable.userId, userId), eq(categoryTable.id, Number(categoryId)));
+
+        if (!existing || existing.length === 0)
+            return res.status(404).json({ message: "Category not found" });
+
+        const oldImage = existing[0].image;
+        const updatedValues = {};
+        if (category) updatedValues.category = category;
+        if (file) {
+            // delete old image
+            const oldPath = path.join("uploads", path.basename(oldImage));
+            if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+            updatedValues.image = `/uploads/${file.filename}`;
+        }
+
+        await db.update(categoryTable)
+            .set(updatedValues)
+            .where(eq(categoryTable.id, Number(categoryId)));
+
+        res.status(200).json({ message: "Category updated successfully" });
+    } catch (error) {
+        console.error("Error updating category:", error);
+        return throwError({ message: "Failed to update category", res, status: 500 });
+    }
+};
