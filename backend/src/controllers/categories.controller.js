@@ -99,3 +99,32 @@ export const editCategory = async (req, res) => {
         return throwError({ message: "Failed to update category", res, status: 500 });
     }
 };
+
+export const deleteCategory = async (req, res) => {
+    const { categoryId } = req.body;
+    const userId = req.userId;
+
+    if (!userId) return throwError({ message: "userId is required", res, status: 400 });
+    if (!categoryId) return throwError({ message: "categoryId is required", res, status: 400 });
+
+    try {
+        const category = await db.select().from(categoryTable)
+            .where(eq(categoryTable.userId, userId), eq(categoryTable.id, Number(categoryId)));
+
+        if (!category || category.length === 0)
+            return res.status(404).json({ message: "Category not found" });
+
+        // Delete image file
+        const imagePath = path.join("uploads", path.basename(category[0].image));
+        if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+
+        // Delete from DB
+        await db.delete(categoryTable)
+            .where(eq(categoryTable.id, Number(categoryId)));
+
+        res.status(200).json({ message: "Category deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting category:", error);
+        return throwError({ message: "Failed to delete category", res, status: 500 });
+    }
+};
