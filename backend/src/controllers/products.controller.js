@@ -18,8 +18,9 @@ export const getProducts = async (req, res) => {
 };
 
 export const getProductById = async (req, res) => {
-    const { userId, productId } = req.body;
+    const { productId } = req.body;
 
+    const userId = req.userId; // Get userId from the authenticated request
     if (!userId) {
         return throwError({ message: "userId is required", res, status: 400 });
     }
