@@ -47,35 +47,57 @@ export const deleteProduct = async (req, res) => {
     const { productId } = req.body;
 
     const userId = req.userId;
-
-    if (!userId) {
-        return throwError({ message: "userId is required", res, status: 400 });
-    }
-    if (!productId) {
-        return throwError({ message: "productId is required", res, status: 400 });
-    }
+    if (!userId) return throwError({ message: "userId is required", res, status: 400 });
+    if (!productId) return throwError({ message: "productId is required", res, status: 400 });
 
     try {
-        const product = await db.select().from(productsTable).where(eq(productsTable.userId, userId), eq(productsTable.id, Number(productId)));
+        // 1. Check product exists
+        const product = await db.select().from(productsTable).where(
+            eq(productsTable.userId, userId),
+            eq(productsTable.id, Number(productId))
+        );
 
         if (!product || product.length === 0) {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        const result = await db.delete(productsTable).where(eq(productsTable.userId, userId), eq(productsTable.id, Number(productId)));
+        // 2. Get all images linked to the product
+        const productImages = await db.select({
+            imageId: productImagesTable.imageId,
+            image: imagesTable.image
+        })
+        .from(productImagesTable)
+        .innerJoin(imagesTable, eq(productImagesTable.imageId, imagesTable.id))
+        .where(eq(productImagesTable.productId, Number(productId)));
 
-        if (result.count === 0) {
-            return res.status(404).json({ message: "Product not found or already deleted" });
+        // 3. Delete image files from uploads folder
+        for (const img of productImages) {
+            const filePath = path.join("uploads", path.basename(img.image));
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
         }
 
-        res.status(200).json({ message: "Product deleted successfully" });
+        // 4. Delete records in productImagesTable and imagesTable
+        if (productImages.length > 0) {
+            const imageIds = productImages.map(img => img.imageId);
+            await db.delete(productImagesTable).where(inArray(productImagesTable.imageId, imageIds));
+            await db.delete(imagesTable).where(inArray(imagesTable.id, imageIds));
+        }
+
+        // 5. Delete product
+        await db.delete(productsTable).where(
+            eq(productsTable.userId, userId),
+            eq(productsTable.id, Number(productId))
+        );
+
+        res.status(200).json({ message: "Product and images deleted successfully" });
 
     } catch (error) {
         console.error("Error deleting product:", error);
         return throwError({ message: "Failed to delete product", res, status: 500 });
     }
-
-}
+};
 
 export const createProduct = async (req, res) => {
     const { categoryId, title, description, price, quantity } = req.body;
@@ -88,6 +110,8 @@ export const createProduct = async (req, res) => {
 
     const categoryIdInt = categoryId && categoryId !== "" ? Number(categoryId) : null;
 
+    const priceNum = Number(price);
+    const quantityNum = Number(quantity);
     if (isNaN(priceNum) || isNaN(quantityNum)) {
         return throwError({ message: "Price and quantity must be numbers", res, status: 400 });
     }
