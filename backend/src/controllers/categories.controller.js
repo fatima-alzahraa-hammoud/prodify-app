@@ -17,6 +17,27 @@ export const getCategories = async (req, res) => {
     }
 };
 
+export const getCategoryById = async (req, res) => {
+    const { categoryId } = req.body;
+    const userId = req.userId;
+
+    if (!userId) return throwError({ message: "userId is required", res, status: 400 });
+    if (!categoryId) return throwError({ message: "categoryId is required", res, status: 400 });
+
+    try {
+        const category = await db.select().from(categoryTable)
+            .where(eq(categoryTable.userId, userId), eq(categoryTable.id, Number(categoryId)));
+
+        if (!category || category.length === 0)
+            return res.status(404).json({ message: "Category not found" });
+
+        res.status(200).json({ category: category[0] });
+    } catch (error) {
+        console.error("Error fetching category:", error);
+        return throwError({ message: "Failed to fetch category", res, status: 500 });
+    }
+};
+
 
 export const createCategory = async (req, res) => {
     const userId = req.userId;
