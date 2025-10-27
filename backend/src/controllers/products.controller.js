@@ -1,4 +1,4 @@
-import { eq, inArray  } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "../config/db.js";
 import { imagesTable, productImagesTable, productsTable } from "../db/schema.js";
 import { throwError } from "../utils/throwError.js";
@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 
 export const getProducts = async (req, res) => {
-    const { userId } = req.body;
+    const userId = req.userId;
     if (!userId) {
         return throwError({ message: "userId is required", res, status: 400 });
     }
@@ -66,9 +66,9 @@ export const deleteProduct = async (req, res) => {
             imageId: productImagesTable.imageId,
             image: imagesTable.image
         })
-        .from(productImagesTable)
-        .innerJoin(imagesTable, eq(productImagesTable.imageId, imagesTable.id))
-        .where(eq(productImagesTable.productId, Number(productId)));
+            .from(productImagesTable)
+            .innerJoin(imagesTable, eq(productImagesTable.imageId, imagesTable.id))
+            .where(eq(productImagesTable.productId, Number(productId)));
 
         // 3. Delete image files from uploads folder
         for (const img of productImages) {
@@ -101,7 +101,7 @@ export const deleteProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     const { categoryId, title, description, price, quantity } = req.body;
-    
+
     const userId = req.userId;
     const files = req.files; // multer adds uploaded files here
 
@@ -136,7 +136,7 @@ export const createProduct = async (req, res) => {
 
 export const editProduct = async (req, res) => {
     const { productId, title, description, price, quantity, categoryId, removeImageIds } = req.body;
-    
+
     const userId = req.userId;
     const files = req.files;
 
@@ -176,7 +176,7 @@ export const editProduct = async (req, res) => {
             const imagesToRemove = await db.select({ id: imagesTable.id, image: imagesTable.image })
                 .from(imagesTable)
                 .where(inArray(imagesTable.id, removeImageIds.map(id => Number(id))));
-            
+
             for (const img of imagesToRemove) {
                 const filePath = path.join("uploads", path.basename(img.image));
                 if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
@@ -196,7 +196,7 @@ export const editProduct = async (req, res) => {
         }
 
         // 5. Ensure at least one image exists
-        const existingImages = await db.select().from(productImagesTable).where(eq(productImagesTable.productId,Number(productId)));
+        const existingImages = await db.select().from(productImagesTable).where(eq(productImagesTable.productId, Number(productId)));
         if (!existingImages || existingImages.length === 0) {
             return throwError({ message: "Product must have at least one image", res, status: 400 });
         }
