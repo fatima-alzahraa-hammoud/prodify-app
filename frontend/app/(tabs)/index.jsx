@@ -188,7 +188,7 @@ const HomeScreen = () => {
                                 searchQuery
                                     ? `Results for ${searchQuery}`
                                     : selectedCategory
-                                        ? selectedCategory
+                                        ? selectedCategory.category
                                         : "All Products"
                             }
                         </Text>
