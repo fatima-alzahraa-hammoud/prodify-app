@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
-import { homeStyles } from '../assets/styles/homeStyles'
-import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { homeStyles } from '../assets/styles/homeStyles';
 import { COLORS } from '../constants/colors';
 
 const CategoryFilter = ({ categories, selectedCategory, onSelectCategory, onAddPress, showAddButton = false }) => {
@@ -12,19 +12,19 @@ const CategoryFilter = ({ categories, selectedCategory, onSelectCategory, onAddP
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={homeStyles.categoryFilterScrollContent}
             >
-                {categories.map((category) => {
-                    const isSelected = selectedCategory === category.name;
+                {categories.map((cat) => {
+                    const isSelected = selectedCategory?.id === cat.id;
                     return(
                         <TouchableOpacity
-                            key={category.id}
+                            key={cat.id}
                             style={[
                                 homeStyles.categoryButton, isSelected && homeStyles.selectedCategory,
                             ]}
-                            onPress={() => onSelectCategory(category.name)}
+                            onPress={() => onSelectCategory(cat)}
                             activeOpacity={0.7}
                         >
                             <Image 
-                                source={{uri: category.image}}
+                                source={{uri: `YOUR_API_BASE_URL${cat.image}`}}
                                 style={[
                                     homeStyles.categoryImage, isSelected && homeStyles.selectedCategoryImage,
                                 ]}
@@ -36,7 +36,7 @@ const CategoryFilter = ({ categories, selectedCategory, onSelectCategory, onAddP
                                     homeStyles.categoryText, isSelected && homeStyles.selectedCategoryText
                                 ]}
                             >
-                                {category.name}
+                                {cat.category}
                             </Text>
                         </TouchableOpacity>
                     )
