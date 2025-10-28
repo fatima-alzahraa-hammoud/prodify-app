@@ -27,7 +27,7 @@ const AddCategoryModal = ({ visible, onClose, onSave }) => {
             }
 
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                mediaTypes: ['images'],
                 allowsEditing: true,
                 aspect: [1, 1],
                 quality: 0.8,
@@ -56,15 +56,16 @@ const AddCategoryModal = ({ visible, onClose, onSave }) => {
         setLoading(true);
         try {
             const formData = new FormData();
-            formData.append('name', categoryName.trim());
+            formData.append('category', categoryName.trim());
 
             // Extract filename from URI
             const filename = imageUri.split('/').pop();
             const match = /\.(\w+)$/.exec(filename);
             const type = match ? `image/${match[1]}` : 'image/jpeg';
 
+            // Backend expects 'image' field
             formData.append('image', {
-                uri: imageUri,
+                uri: Platform.OS === 'ios' ? imageUri.replace('file://', '') : imageUri,
                 name: filename,
                 type: type,
             });
