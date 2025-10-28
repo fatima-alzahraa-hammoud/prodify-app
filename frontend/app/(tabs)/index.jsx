@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { homeStyles } from '../../assets/styles/homeStyles';
 import { searchStyles } from '../../assets/styles/searchStyles';
+import AddCategoryModal from '../../components/AddCategoryModal';
 import CategoryFilter from '../../components/CategoryFilter';
 import ProductCard from '../../components/ProductCard';
 import { COLORS } from '../../constants/colors';
@@ -22,6 +23,7 @@ const HomeScreen = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         loadCategories();
@@ -86,7 +88,22 @@ const HomeScreen = () => {
     };
 
     const handleAddCategory = () => {
+        setModalVisible(true);
+    };
 
+    const handleSaveCategory = async (formData) => {
+        try {
+            const token = await getToken();
+            await categoriesAPI.create(token, formData);
+            
+            Alert.alert('Success', 'Category created successfully');
+            
+            // Reload categories
+            await loadCategories();
+        } catch (error) {
+            const err = handleAPIError(error);
+            throw new Error(err.message);
+        }
     };
 
     const onRefresh = async () => {
@@ -211,6 +228,12 @@ const HomeScreen = () => {
                     )}
                 </View>
             </ScrollView>
+
+            <AddCategoryModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onSave={handleSaveCategory}
+            />
         </View>
     )
 }
