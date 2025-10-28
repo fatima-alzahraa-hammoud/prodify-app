@@ -9,9 +9,7 @@ export const productsAPI = {
 
     getById: async (token, productId) => {
         setAuthToken(token);
-        const response = await api.get("/products/product", {
-            data: {productId}
-        });
+        const response = await api.post("/products/product", {productId});
 
         return response.data.product;
     },
