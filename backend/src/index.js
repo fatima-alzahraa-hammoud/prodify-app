@@ -1,0 +1,29 @@
+import express from "express";
+import cors from 'cors';
+import { ENV } from "./config/env.js";
+import productRoutes from "./routes/products.routes.js";
+import categoryRoutes from "./routes/categories.routes.js";
+import { clerkMiddleware } from "@clerk/express";
+
+const app = express();
+
+app.use(cors({
+    origin: [
+        'http://localhost:8081',
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+const port = ENV.PORT;
+
+app.use(express.json());
+app.use(clerkMiddleware())
+
+app.use("/products", productRoutes);
+app.use("/categories", categoryRoutes);
+
+app.listen(port, () => {
+    console.log("Server is running on Port: ", port);
+});
