@@ -2,7 +2,7 @@ import { useAuth } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from "expo-image";
 import { useEffect, useState } from 'react';
-import { FlatList, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { homeStyles } from '../../assets/styles/homeStyles';
 import { searchStyles } from '../../assets/styles/searchStyles';
 import AddCategoryModal from '../../components/AddCategoryModal';
