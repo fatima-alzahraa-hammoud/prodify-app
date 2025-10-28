@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://prodify-app-6mmb.onrender.com";
+export const API_BASE_URL = "https://prodify-app-6mmb.onrender.com";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
