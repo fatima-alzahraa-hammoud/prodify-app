@@ -1,5 +1,6 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import { Image } from "expo-image";
 import { useEffect, useState } from 'react';
 import { Alert, FlatList, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -16,6 +17,7 @@ import { productsAPI } from '../../services/productsAPI';
 
 const HomeScreen = () => {
     const { getToken } = useAuth();
+    const isFocused = useIsFocused();
 
     const [products, setProducts] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -26,10 +28,19 @@ const HomeScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
 
+    // Load data on mount
     useEffect(() => {
         loadCategories();
         loadProducts();
     }, []);
+
+    // Reload data when screen comes into focus
+    useEffect(() => {
+        if (isFocused) {
+            loadCategories();
+            loadProducts();
+        }
+    }, [isFocused]);
 
     useEffect(() => {
         filterProducts();
@@ -83,7 +94,6 @@ const HomeScreen = () => {
             setSelectedCategory(category);
         }
         setSearchQuery("");
-        // load category data
     };
 
     const handleAddCategory = () => {
