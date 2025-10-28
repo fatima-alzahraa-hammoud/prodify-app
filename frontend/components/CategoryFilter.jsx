@@ -3,6 +3,7 @@ import { Image } from 'expo-image';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { homeStyles } from '../assets/styles/homeStyles';
 import { COLORS } from '../constants/colors';
+import { API_BASE_URL } from "../services/api.js";
 
 const CategoryFilter = ({ categories, selectedCategory, onSelectCategory, onAddPress, showAddButton = false }) => {
     return (
@@ -24,7 +25,7 @@ const CategoryFilter = ({ categories, selectedCategory, onSelectCategory, onAddP
                             activeOpacity={0.7}
                         >
                             <Image 
-                                source={{uri: `YOUR_API_BASE_URL${cat.image}`}}
+                                source={{uri: `${API_BASE_URL}${cat.image}`}}
                                 style={[
                                     homeStyles.categoryImage, isSelected && homeStyles.selectedCategoryImage,
                                 ]}
