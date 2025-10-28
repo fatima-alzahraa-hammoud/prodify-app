@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { COLORS } from "../constants/colors";
+import { Text, TouchableOpacity, View } from "react-native";
 import { productCardStyles } from "../assets/styles/homeStyles";
+import { COLORS } from "../constants/colors";
 
 export default function ProductCard({ product }) {
     const router = useRouter();
@@ -30,7 +30,7 @@ export default function ProductCard({ product }) {
 
             <View style={productCardStyles.content}>
                 <Text style={productCardStyles.title} numberOfLines={2}>
-                    {product.name}
+                    {product.title}
                 </Text>
 
                 {product.description && (
