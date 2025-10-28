@@ -1,7 +1,7 @@
-import {useAuth} from "@clerk/clerk-expo";
-import {Redirect, Tabs} from "expo-router";
-import {COLORS} from "../../constants/colors";
-import {Ionicons} from "@expo/vector-icons";
+import { useAuth } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
+import { Redirect, Tabs } from "expo-router";
+import { COLORS } from "../../constants/colors";
 
 const TabsLayout = () => {
 
@@ -53,7 +53,7 @@ const TabsLayout = () => {
                 }}
             />
         </Tabs>
-    )
-}
+    );
+};
 
-export default TabsLayout
+export default TabsLayout;
