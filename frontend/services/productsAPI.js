@@ -19,7 +19,7 @@ export const productsAPI = {
     create: async (token, formData) => {
         setAuthToken(token);
         const response = await api.post("/products", formData, {
-            headers: {'Content-Type': multipart/form-data}
+            headers: {'Content-Type': 'multipart/form-data'}
         });
         return response.data.product;
     },
