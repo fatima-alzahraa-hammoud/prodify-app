@@ -34,10 +34,8 @@ const HomeScreen = () => {
         filterProducts();
     }, [searchQuery, selectedCategory, products]);
 
-    const loadCategories = async () =>{
-
+    const loadCategories = async () => {
         try {
-
             const token = await getToken();
             const categories = await categoriesAPI.getAll(token);
             setCategories(categories || []);
@@ -47,7 +45,7 @@ const HomeScreen = () => {
         }
     }
 
-    const loadProducts = async () =>{
+    const loadProducts = async () => {
         try {
             setLoading(true);
             const token = await getToken();
@@ -64,13 +62,13 @@ const HomeScreen = () => {
     const filterProducts = () => {
         let filtered = [...products];
 
-        if (selectedCategory){
-            filtered = filtered.filter( product => product.categoryId === selectedCategory.id);
+        if (selectedCategory) {
+            filtered = filtered.filter(product => product.categoryId === selectedCategory.id);
         }
 
-        if (searchQuery.trim()){
+        if (searchQuery.trim()) {
             filtered = filtered.filter(product => product.title.toLowerCase().includes(searchQuery.toLowerCase())
-            || product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+                || product.description?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
@@ -78,9 +76,9 @@ const HomeScreen = () => {
     }
 
     const handleCategorySelect = async (category) => {
-        if (category === selectedCategory){
+        if (category === selectedCategory) {
             setSelectedCategory(null);
-        } else{
+        } else {
             setSelectedCategory(category);
         }
         setSearchQuery("");
@@ -95,9 +93,9 @@ const HomeScreen = () => {
         try {
             const token = await getToken();
             await categoriesAPI.create(token, formData);
-            
+
             Alert.alert('Success', 'Category created successfully');
-            
+
             // Reload categories
             await loadCategories();
         } catch (error) {
@@ -119,13 +117,13 @@ const HomeScreen = () => {
         <View style={homeStyles.container}>
             <View style={searchStyles.searchSection}>
                 <View style={searchStyles.searchContainer}>
-                    <Ionicons 
-                        name="search" 
-                        size={20} 
-                        color={COLORS.textLight} 
-                        style={searchStyles.searchIcon} 
+                    <Ionicons
+                        name="search"
+                        size={20}
+                        color={COLORS.textLight}
+                        style={searchStyles.searchIcon}
                     />
-                    <TextInput 
+                    <TextInput
                         style={searchStyles.searchInput}
                         placeholder="Search products"
                         placeholderTextColor={COLORS.textLight}
@@ -148,7 +146,7 @@ const HomeScreen = () => {
                     )}
                 </View>
             </View>
-            
+
             <ScrollView
                 contentContainerStyle={homeStyles.scrollContent}
                 showsVerticalScrollIndicator={false}
@@ -162,7 +160,7 @@ const HomeScreen = () => {
             >
                 {/* Image */}
                 <View style={homeStyles.bannerImageContainer}>
-                    <Image 
+                    <Image
                         source={require("../../assets/images/home_banner.png")}
                         style={homeStyles.bannerImage}
                         contentFit='contain'
@@ -186,11 +184,11 @@ const HomeScreen = () => {
                     <View style={homeStyles.sectionHeader}>
                         <Text style={homeStyles.sectionTitle}>
                             {
-                                searchQuery 
-                                ? `Results for ${searchQuery}`
-                                : selectedCategory
-                                ? selectedCategory
-                                : "All Products"
+                                searchQuery
+                                    ? `Results for ${searchQuery}`
+                                    : selectedCategory
+                                        ? selectedCategory
+                                        : "All Products"
                             }
                         </Text>
                         <Text style={searchStyles.productCount}>
@@ -199,9 +197,9 @@ const HomeScreen = () => {
                     </View>
 
                     {filteredProducts.length > 0 ? (
-                        <FlatList 
+                        <FlatList
                             data={filteredProducts}
-                            renderItem={({item}) => <ProductCard product={item}/>}
+                            renderItem={({ item }) => <ProductCard product={item} />}
                             keyExtractor={(item) => item.id.toString()}
                             numColumns={2}
                             columnWrapperStyle={homeStyles.row}
@@ -210,18 +208,18 @@ const HomeScreen = () => {
                         />
                     ) : (
                         <View style={homeStyles.emptyState}>
-                            <Ionicons 
+                            <Ionicons
                                 name='cube-outline'
                                 size={64}
                                 color={COLORS.textLight}
                             />
                             <Text style={homeStyles.emptyTitle}>No products found</Text>
                             <Text style={homeStyles.emptyDescription}>
-                                { searchQuery
+                                {searchQuery
                                     ? "Try adjusting your search"
                                     : selectedCategory
-                                    ? "No products in this category"
-                                    : "Start by adding your first product"
+                                        ? "No products in this category"
+                                        : "Start by adding your first product"
                                 }
                             </Text>
                         </View>
