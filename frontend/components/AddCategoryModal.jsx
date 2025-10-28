@@ -3,16 +3,8 @@ import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+    ActivityIndicator, Alert, KeyboardAvoidingView, Modal,
+    Platform, ScrollView, Text, TextInput, TouchableOpacity, View
 } from 'react-native';
 import { modalStyles } from '../assets/styles/modalStyles';
 import { COLORS } from '../constants/colors';
