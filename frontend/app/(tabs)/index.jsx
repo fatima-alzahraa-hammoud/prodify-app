@@ -1,14 +1,19 @@
-import { View, Text, ScrollView, TextInput, TouchableOpacity, FlatList } from 'react-native'
+import { useAuth } from '@clerk/clerk-expo';
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from "expo-image";
+import { useEffect, useState } from 'react';
+import { FlatList, RefreshControl, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { homeStyles } from '../../assets/styles/homeStyles';
 import { searchStyles } from '../../assets/styles/searchStyles';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/colors';
-import { useEffect, useState } from 'react';
-import {Image} from "expo-image";
 import CategoryFilter from '../../components/CategoryFilter';
 import ProductCard from '../../components/ProductCard';
+import { COLORS } from '../../constants/colors';
+import { categoriesAPI } from '../../services/categoriesAPI';
+import { handleAPIError } from '../../services/handleAPIError';
+import { productsAPI } from '../../services/productsAPI';
 
 const HomeScreen = () => {
+    const { getToken } = useAuth();
 
     const [products, setProducts] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -16,6 +21,7 @@ const HomeScreen = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         loadCategories();
@@ -29,29 +35,25 @@ const HomeScreen = () => {
     const loadCategories = async () =>{
 
         try {
-            
-            setCategories([
-                { id: 1, name: 'Electronics', image: 'https://via.placeholder.com/100' },
-                { id: 2, name: 'Clothing', image: 'https://via.placeholder.com/100' },
-                { id: 3, name: 'Home', image: 'https://via.placeholder.com/100' },
-            ]);
 
+            const token = await getToken();
+            const categories = await categoriesAPI.getAll(token);
+            setCategories(categories || []);
         } catch (error) {
-            console.error('Error loading categories:', error);
+            const err = handleAPIError(error);
+            console.error('Error loading categories:', err.message);
         }
     }
 
     const loadProducts = async () =>{
         try {
             setLoading(true);
-
-
-            setProducts([
-                { id: 1, name: 'Product 1', price: 99.99, category: 'Electronics', image: 'https://via.placeholder.com/200', quantity: 6, description: "hello" },
-                { id: 2, name: 'Product 2', price: 49.99, category: 'Clothing', image: 'https://via.placeholder.com/200', quantity: 4,  description: "hiii"  },
-            ]);
+            const token = await getToken();
+            const products = await productsAPI.getAll(token);
+            setProducts(products || []);
         } catch (error) {
-            console.error('Error loading products:', error);
+            const err = handleAPIError(error);
+            console.error('Error loading products:', err.message);
         } finally {
             setLoading(false);
         }
@@ -61,11 +63,13 @@ const HomeScreen = () => {
         let filtered = [...products];
 
         if (selectedCategory){
-            filtered = filtered.filter( product => product.category === selectedCategory);
+            filtered = filtered.filter( product => product.categoryId === selectedCategory.id);
         }
 
         if (searchQuery.trim()){
-            filtered = filtered.filter(product => product.name.toLowerCase().includes(searchQuery.toLowerCase()));
+            filtered = filtered.filter(product => product.title.toLowerCase().includes(searchQuery.toLowerCase())
+            || product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
         }
 
         setFilteredProducts(filtered);
@@ -84,6 +88,15 @@ const HomeScreen = () => {
     const handleAddCategory = () => {
 
     };
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await loadCategories();
+        await loadProducts();
+        setRefreshing(false);
+    }
+
+    if (loading && !refreshing) return <Text>Loading...</Text>;
 
     return (
         <View style={homeStyles.container}>
@@ -122,6 +135,13 @@ const HomeScreen = () => {
             <ScrollView
                 contentContainerStyle={homeStyles.scrollContent}
                 showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        tintColor={COLORS.primary}
+                    />
+                }
             >
                 {/* Image */}
                 <View style={homeStyles.bannerImageContainer}>
@@ -134,7 +154,7 @@ const HomeScreen = () => {
                 </View>
 
                 {/* Categories with add button */}
-                {categories.length > 0 && (
+                {categories && (
                     <CategoryFilter
                         categories={categories}
                         selectedCategory={selectedCategory}
@@ -182,7 +202,9 @@ const HomeScreen = () => {
                             <Text style={homeStyles.emptyDescription}>
                                 { searchQuery
                                     ? "Try adjusting your search"
-                                    : ""
+                                    : selectedCategory
+                                    ? "No products in this category"
+                                    : "Start by adding your first product"
                                 }
                             </Text>
                         </View>
