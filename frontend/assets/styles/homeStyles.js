@@ -1,0 +1,332 @@
+import { Dimensions, StyleSheet } from "react-native";
+import { COLORS } from "../../constants/colors";
+
+const { width } = Dimensions.get("window");
+const cardWidth = (width - 48) / 2;
+
+export const homeStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+    },
+    scrollContent: {
+        paddingBottom: 32,
+    },
+    welcomeSection: {
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 16,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    welcomeText: {
+        fontSize: 32,
+        fontWeight: "800",
+        color: COLORS.text,
+        letterSpacing: -0.5,
+    },
+
+    bannerImageContainer: {
+        marginHorizontal: 20,
+        marginTop: 25,
+        marginBottom: 24,
+        borderRadius: 24,
+        overflow: "hidden",
+        backgroundColor: COLORS.card,
+        shadowColor: COLORS.shadow,
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 16,
+        elevation: 12,
+        position: "relative",
+    },
+    bannerImage: {
+        width: "100%",
+        height: 200,
+        borderRadius: 24,
+    },
+
+    bannerOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "rgba(0, 0, 0, 0.15)",
+        borderRadius: 24,
+    },
+
+    bannerContent: {
+        position: "absolute",
+        bottom: 20,
+        left: 20,
+        right: 20,
+    },
+    bannerTitle: {
+        fontSize: 26,
+        fontWeight: "800",
+        color: COLORS.white,
+        letterSpacing: -0.5,
+        marginBottom: 4,
+        textShadowColor: "rgba(0, 0, 0, 0.3)",
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+    },
+    bannerSubtitle: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: COLORS.white,
+        opacity: 0.95,
+        textShadowColor: "rgba(0, 0, 0, 0.3)",
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
+    },
+
+    styleImageSection: {
+        paddingHorizontal: 20,
+        marginBottom: 24,
+    },
+    styleImageCard: {
+        borderRadius: 24,
+        overflow: "hidden",
+        backgroundColor: COLORS.card,
+        shadowColor: COLORS.shadow,
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 16,
+        elevation: 12,
+    },
+    styleImageContainer: {
+        height: 240,
+        backgroundColor: COLORS.primary,
+        position: "relative",
+    },
+    styleImage: {
+        width: "100%",
+        height: "100%",
+    },
+    productsSection: {
+        paddingHorizontal: 16,
+        marginTop: 8,
+    },
+    sectionHeader: {
+        marginBottom: 16,
+    },
+    sectionTitle: {
+        fontSize: 22,
+        fontWeight: "800",
+        color: COLORS.text,
+        letterSpacing: -0.5,
+    },
+    productsGrid: {
+        gap: 16,
+    },
+    row: {
+        justifyContent: "space-between",
+        gap: 16,
+    },
+    emptyState: {
+        alignItems: "center",
+        paddingVertical: 64,
+        paddingHorizontal: 32,
+    },
+    emptyTitle: {
+        fontSize: 20,
+        fontWeight: "700",
+        color: COLORS.text,
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    emptyDescription: {
+        fontSize: 14,
+        color: COLORS.textLight,
+        textAlign: "center",
+    },
+    categoryFilterContainer: {
+        marginVertical: 16,
+    },
+    categoryFilterScrollContent: {
+        paddingHorizontal: 16,
+        gap: 12,
+    },
+    categoryButton: {
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: COLORS.card,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+        minWidth: 80,
+        shadowColor: COLORS.shadow,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    selectedCategory: {
+        backgroundColor: COLORS.primary,
+        borderColor: COLORS.primary,
+        shadowOpacity: 0.15,
+    },
+    categoryImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginBottom: 4,
+        backgroundColor: COLORS.border,
+    },
+    selectedCategoryImage: {
+        borderWidth: 2,
+        borderColor: COLORS.white,
+    },
+    categoryText: {
+        fontSize: 12,
+        fontWeight: "600",
+        color: COLORS.text,
+        textAlign: "center",
+    },
+    selectedCategoryText: {
+        color: COLORS.white,
+    },
+    categoryAddButton: {
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: COLORS.card,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: COLORS.primary,
+        borderStyle: "dashed",
+        minWidth: 80,
+    },
+    categoryAddIconContainer: {
+        marginBottom: 4,
+    },
+    categoryAddText: {
+        fontSize: 12,
+        fontWeight: "600",
+        color: COLORS.primary,
+    },
+});
+
+export const productCardStyles = StyleSheet.create({
+    container: {
+        width: cardWidth,
+        backgroundColor: COLORS.card,
+        borderRadius: 20,
+        marginBottom: 16,
+        shadowColor: COLORS.shadow,
+        shadowOffset: {
+            width: 0,
+            height: 6,
+        },
+        shadowOpacity: 0.12,
+        shadowRadius: 12,
+        elevation: 6,
+        overflow: "hidden",
+        borderWidth: 1,
+        borderColor: COLORS.border,
+    },
+    imageContainer: {
+        position: "relative",
+        height: 160,
+        backgroundColor: COLORS.border,
+    },
+    image: {
+        width: "100%",
+        height: "100%",
+    },
+    outOfStockBadge: {
+        position: "absolute",
+        top: 8,
+        right: 8,
+        backgroundColor: "rgba(255, 59, 48, 0.95)",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    outOfStockText: {
+        fontSize: 10,
+        fontWeight: "700",
+        color: COLORS.white,
+        letterSpacing: 0.3,
+        textTransform: "uppercase",
+    },
+    content: {
+        padding: 14,
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: COLORS.text,
+        marginBottom: 6,
+        lineHeight: 22,
+        letterSpacing: -0.3,
+    },
+    description: {
+        fontSize: 13,
+        color: COLORS.textLight,
+        marginBottom: 12,
+        lineHeight: 18,
+    },
+    footer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingTop: 8,
+        borderTopWidth: 1,
+        borderTopColor: COLORS.border,
+    },
+    priceContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: `${COLORS.primary}15`,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 10,
+    },
+    priceText: {
+        fontSize: 15,
+        color: COLORS.primary,
+        marginLeft: 5,
+        fontWeight: "700",
+        letterSpacing: -0.2,
+    },
+    quantityContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: COLORS.background,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 10,
+    },
+    quantityText: {
+        fontSize: 13,
+        color: COLORS.textLight,
+        marginLeft: 5,
+        fontWeight: "600",
+    },
+    outOfStockQuantity: {
+        color: COLORS.error,
+        fontWeight: "700",
+    },
+});
