@@ -7,6 +7,7 @@ import { homeStyles } from '../../assets/styles/homeStyles';
 import { searchStyles } from '../../assets/styles/searchStyles';
 import AddCategoryModal from '../../components/AddCategoryModal';
 import CategoryFilter from '../../components/CategoryFilter';
+import LoadingSpinner from '../../components/LoadingSpinner';
 import ProductCard from '../../components/ProductCard';
 import { COLORS } from '../../constants/colors';
 import { categoriesAPI } from '../../services/categoriesAPI';
@@ -111,7 +112,7 @@ const HomeScreen = () => {
         setRefreshing(false);
     }
 
-    if (loading && !refreshing) return <Text>Loading...</Text>;
+    if (loading && !refreshing) return  <LoadingSpinner message="Loading your products..." />;
 
     return (
         <View style={homeStyles.container}>
